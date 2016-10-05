@@ -3,6 +3,7 @@
 
 var BOARD_WIDTH = 60;
 var BOARD_LENGTH = 60;
+var EMPTY = 0, SNAKE = 1, FOOD = 2;
  
 var board = {
 	width: BOARD_WIDTH,
@@ -41,11 +42,29 @@ var snake = {
 	followers: null,
 	end: null,
 
-	init: function(x,y){
+	init: function(x,y,dir){
+
+		this.direction = dir;
+
+		this.followers = [];
+
+		this.increaseLength();
+	},
+
+	increaseLength: function(){
+
+		this.followers.push(SNAKE);
+		this.end = this.followers[0];
 
 	}
 
 };
+
+function addFood(){
+
+	
+
+}
 
 
 
