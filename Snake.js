@@ -42,6 +42,7 @@ var snake = {
 	followers: null,
 	end: null,
 
+	//Initialize snake
 	init: function(x,y,dir){
 
 		this.direction = dir;
@@ -51,18 +52,35 @@ var snake = {
 		this.increaseLength();
 	},
 
+	//Function that increases length of snake
 	increaseLength: function(){
 
 		this.followers.push(SNAKE);
 		this.end = this.followers[0];
 
+	},
+
+	//Shortens snake by removing follower
+	remove: function(){
+		this.followers.pop();
 	}
 
 };
 
+//Adds food to a random tile on the board
 function addFood(){
+	emptyTracker = [];
+	for(var x = 0; x < BOARD_WIDTH; x++){
+		for(var y = 0; y < BOARD_LENGTH; y++)
+			if( grid[x][y] === EMPTY){
+				emptyTracker.push([x,y]);
+			}
+	}
 
-	
+	var randomTile = Math.floor(Math.random()*emptyTracker.length);
+	board.set(FOOD,randomTile[0],randomTile[1]);
+
+
 
 }
 
