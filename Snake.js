@@ -1,14 +1,19 @@
-//Constants
 
+//Constants detailing board constraints
+var BOARD_WIDTH = 60, BOARD_LENGTH = 60;
 
-var BOARD_WIDTH = 60;
-var BOARD_LENGTH = 60;
+//Directions
+var NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
+
+//Board items
 var EMPTY = 0, SNAKE = 1, FOOD = 2;
  
+
+
 var board = {
 	width: BOARD_WIDTH,
 	length: BOARD_LENGTH,
-	grid: null,
+	grid: [null],
 
 	//Initializes board
 	init: function(){
@@ -49,13 +54,13 @@ var snake = {
 
 		this.followers = [];
 
-		this.increaseLength();
+		this.increaseLength(x,y);
 	},
 
 	//Function that increases length of snake
-	increaseLength: function(){
+	increaseLength: function(x,y){
 
-		this.followers.push(SNAKE);
+		this.followers.push([x,y]);
 		this.end = this.followers[0];
 
 	},
@@ -70,14 +75,14 @@ var snake = {
 //Adds food to a random tile on the board
 function addFood(){
 	emptyTracker = [];
-	for(var x = 0; x < BOARD_WIDTH; x++){
-		for(var y = 0; y < BOARD_LENGTH; y++)
-			if( grid[x][y] === EMPTY){
+	for(var x = 0; x < board.width; x++){
+		for(var y = 0; y < board.length; y++)
+			if( board.grid[x][y] === EMPTY){
 				emptyTracker.push([x,y]);
 			}
 	}
-
 	var randomTile = Math.floor(Math.random()*emptyTracker.length);
+	randomTile = emptyTracker[randomTile];
 	board.set(FOOD,randomTile[0],randomTile[1]);
 
 
@@ -88,14 +93,23 @@ function addFood(){
 
 function main(){
 	board.init();
-	//document.write(board.grid[0]);
-	// var testArray = [];
-	// testArray.push([]);
-	// testArray[0].push(5);
-	// testArray.push(2);
-	 console.log(board.grid);
-	 board.grid[0][2] = 2;
+	
+
+
+	var snakeSpawn = {x:Math.floor(Math.random() * board.width) + board.width/2  , y:Math.floor(Math.random() * board.length) + board.length/2};	
+	snake.init(snakeSpawn.x,snakeSpawn.y,NORTH);
+	board.set(SNAKE,snakeSpawn.x,snakeSpawn.y);
+	console.log(snakeSpawn);
+	 addFood();
+
 	 document.write(board.grid);
+}
+
+
+function setCanvas(){
+
+
+	
 }
 
 main();
