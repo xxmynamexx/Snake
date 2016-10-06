@@ -1,6 +1,6 @@
 
 //Constants detailing board constraints
-var BOARD_WIDTH = 60, BOARD_LENGTH = 60;
+var BOARD_WIDTH = 30, BOARD_LENGTH = 30;
 
 //Directions
 var NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
@@ -92,24 +92,26 @@ function addFood(){
 
 
 function main(){
+	setCanvas();
 	board.init();
-	
-
-
-	var snakeSpawn = {x:Math.floor(Math.random() * board.width) + board.width/2  , y:Math.floor(Math.random() * board.length) + board.length/2};	
+	var snakeSpawn = {x:Math.floor(Math.random() * (Math.floor(board.width/2)) + Math.floor(board.width/4))  , y:Math.floor(Math.random() * Math.floor((board.length/2 )) + Math.floor(board.length/4))};	
 	snake.init(snakeSpawn.x,snakeSpawn.y,NORTH);
 	board.set(SNAKE,snakeSpawn.x,snakeSpawn.y);
 	console.log(snakeSpawn);
 	 addFood();
 
-	 document.write(board.grid);
+	 //document.write(board.grid);
 }
 
 
 function setCanvas(){
 
+	var canvas = document.createElement("canvas");
+	canvas.width = BOARD_WIDTH * 10;
+	canvas.length = BOARD_LENGTH * 10;
+	var ctx = canvas.getContext("2d");
+	document.body.appendChild(canvas);
 
-	
 }
 
 main();
