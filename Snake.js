@@ -10,13 +10,13 @@ var EMPTY = 0, SNAKE = 1, FOOD = 2;
 
 //Object size
 
-var objSize = null;
+var objSize = Math.floor(BOARD_LENGTH / 50);
 
 //Canvas
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-canvas.width = BOARD_WIDTH * 2;
-canvas.height = BOARD_LENGTH * 2;
+canvas.width = BOARD_WIDTH;
+canvas.height = BOARD_LENGTH;
  
 
 
@@ -94,6 +94,7 @@ function addFood(){
 	var randomTile = Math.floor(Math.random()*emptyTracker.length);
 	randomTile = emptyTracker[randomTile];
 	board.set(FOOD,randomTile[0],randomTile[1]);
+	console.log("random tile is :" + randomTile);
 
 
 
@@ -104,7 +105,7 @@ function addFood(){
 function main(){
 	//setCanvas();
 	board.init();
-	var snakeSpawn = {x:Math.floor(Math.random() * (Math.floor(board.width/2)) + Math.floor(board.width/4))  , y:Math.floor(Math.random() * Math.floor((board.length/2 )) + Math.floor(board.length/4))};	
+	var snakeSpawn = {x:(Math.floor(board.width/2))  , y:(Math.floor(board.length/2 ))};	
 	snake.init(snakeSpawn.x,snakeSpawn.y,NORTH);
 	board.set(SNAKE,snakeSpawn.x,snakeSpawn.y);
 	console.log(board.grid);
@@ -117,16 +118,17 @@ function drawBoard(){
 		for(var y = 0; y < board.length; y++){
 			switch (board.get(x,y)){
 				case EMPTY:
-					ctx.fillStyle= '#FFFFFF';
+					//ctx.fillStyle= '#FFFFFF';
 					break;
 				case SNAKE:
 					ctx.fillStyle= '#007F00';
+					ctx.fillRect(x,y,objSize,objSize);
 					break;
 				case FOOD:
 					ctx.fillStyle= '#660000';
+					ctx.fillRect(x,y,objSize,objSize);
 					break;
 			}
-			ctx.fillRect(x*BOARD_WIDTH,y * BOARD_LENGTH,500,500);
 		}
 		}
 
