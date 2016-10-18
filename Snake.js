@@ -1,6 +1,6 @@
 
 //Constants detailing board constraints
-var BOARD_WIDTH = 250, BOARD_LENGTH = 250;
+var BOARD_WIDTH = 400, BOARD_LENGTH = 400;
 
 //Directions
 var NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
@@ -8,17 +8,20 @@ var NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 //Board items
 var EMPTY = 0, SNAKE = 1, FOOD = 2;
 
+var score = 0;
+
 //Object size
 
-var objSize = Math.floor(BOARD_LENGTH / 50);
+var objSize = Math.floor(10);
 
 //Canvas
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-canvas.width = BOARD_WIDTH;
-canvas.height = BOARD_LENGTH;
+canvas.width = BOARD_WIDTH + objSize;
+canvas.height = BOARD_LENGTH + objSize;
  
-
+//Variable to count frames
+var frame = 0;
 
 var board = {
 	width: BOARD_WIDTH,
@@ -67,7 +70,7 @@ var snake = {
 		this.increaseLength(x,y);
 	},
 
-	//Function that increases length of snake
+	//Function that increases length of snake/ if no snake exists creates first instance
 	increaseLength: function(x,y){
 
 		this.followers.unshift([x,y]);
@@ -94,23 +97,22 @@ function addFood(){
 	var randomTile = Math.floor(Math.random()*emptyTracker.length);
 	randomTile = emptyTracker[randomTile];
 	board.set(FOOD,randomTile[0],randomTile[1]);
-	console.log("random tile is :" + randomTile);
-
-
-
 }
 
 
-
 function main(){
-	//setCanvas();
 	board.init();
 	var snakeSpawn = {x:(Math.floor(board.width/2))  , y:(Math.floor(board.length/2 ))};	
 	snake.init(snakeSpawn.x,snakeSpawn.y,NORTH);
 	board.set(SNAKE,snakeSpawn.x,snakeSpawn.y);
-	console.log(board.grid);
 	addFood();
+	animationLoop();
+}
+
+function animationLoop(){
+	tick();
 	drawBoard();
+	window.requestAnimationFrame(animationLoop);
 }
 
 function drawBoard(){
@@ -131,7 +133,29 @@ function drawBoard(){
 			}
 		}
 		}
+}
+
+function tick(){
+	frame++;
+	if(frame % 10 === 0){
+
+	var newX = snake.end[0];
+	var newY = snake.end[1];
+	newX++;
+	console.log(snake.end);
+	console.log(snake.end[0]);
+	console.log(snake.end[1]);
+	board.set(EMPTY,snake.end[0],snake.end[1]);
+	ctx.fillStyle= '#FFFFFF';
+	ctx.fillRect(snake.end[0],snake.end[1],objSize,objSize);
+	snake.end[0] = newX;
+	snake.end[1] = newY;
+	board.set(SNAKE,newX,newY);
 
 }
+
+
+}
+
 
 main();
