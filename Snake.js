@@ -8,7 +8,7 @@ var NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 //Board items
 var EMPTY = 0, SNAKE = 1, FOOD = 2;
 
-var score = 0;
+var score = 0, keyState = {}, moveSpeed = 2;
 
 //Object size
 
@@ -101,6 +101,13 @@ function addFood(){
 
 
 function main(){
+
+	document.addEventListener("keydown",function(evnt){
+		keyState[evnt.keyCode] = true;
+	});
+	document.addEventListener("keyup",function(evnt){
+	delete keyState[evnt.keyCode];
+	});
 	board.init();
 	var snakeSpawn = {x:(Math.floor(board.width/2))  , y:(Math.floor(board.length/2 ))};	
 	snake.init(snakeSpawn.x,snakeSpawn.y,NORTH);
@@ -136,20 +143,42 @@ function drawBoard(){
 }
 
 function tick(){
-	frame++;
-	if(frame % 10 === 0){
 
+	if (keyState[38]) snake.direction = NORTH;
+  	if (keyState[39]) snake.direction = EAST;
+  	if (keyState[37]) snake.direction = WEST;
+  	if (keyState[40]) snake.direction = SOUTH;
+
+	frame++;
+	if(frame % 1 === 0){
 	var newX = snake.end[0];
 	var newY = snake.end[1];
-	newX++;
-	console.log(snake.end);
-	console.log(snake.end[0]);
-	console.log(snake.end[1]);
+	
+	switch(snake.direction){
+		case NORTH:
+			newY-=moveSpeed;
+			break;
+		case EAST:
+			newX+=moveSpeed;
+			break;
+		case WEST:
+			newX-=moveSpeed;
+			break;
+		case SOUTH:
+			newY+=moveSpeed;
+			break;
+	}
+
+	if(newX > BOARD_WIDTH || newY > BOARD_LENGTH || newX < 0 || newY < 0){
+		board.init;
+	}
+	console.log(newX);
 	board.set(EMPTY,snake.end[0],snake.end[1]);
 	ctx.fillStyle= '#FFFFFF';
 	ctx.fillRect(snake.end[0],snake.end[1],objSize,objSize);
 	snake.end[0] = newX;
 	snake.end[1] = newY;
+	console.log(keyState);
 	board.set(SNAKE,newX,newY);
 
 }
