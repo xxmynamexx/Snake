@@ -1,6 +1,6 @@
 
 //Constants detailing board constraints
-var BOARD_WIDTH = 400, BOARD_LENGTH = 400;
+var BOARD_WIDTH = 40, BOARD_LENGTH = 40;
 
 //Directions
 var NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
@@ -8,17 +8,13 @@ var NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 //Board items
 var EMPTY = 0, SNAKE = 1, FOOD = 2;
 
-var score = 0, keyState = {}, moveSpeed = 2;
-
-//Object size
-
-var objSize = Math.floor(10);
+var score = 0, keyState = {}, moveSpeed = 1;
 
 //Canvas
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-canvas.width = BOARD_WIDTH + objSize;
-canvas.height = BOARD_LENGTH + objSize;
+canvas.width = BOARD_WIDTH * 5;
+canvas.height = BOARD_LENGTH *5;
  
 //Variable to count frames
 var frame = 0;
@@ -99,7 +95,17 @@ function addFood(){
 	board.set(FOOD,randomTile[0],randomTile[1]);
 }
 
+function start(){
 
+	board.init();
+	var snakeSpawn = {x:(Math.floor(board.width/2))  , y:(Math.floor(board.length/2 ))};	
+	snake.init(snakeSpawn.x,snakeSpawn.y,NORTH);
+	board.set(SNAKE,snakeSpawn.x,snakeSpawn.y);
+	addFood();
+
+
+
+}
 function main(){
 
 	document.addEventListener("keydown",function(evnt){
@@ -108,13 +114,11 @@ function main(){
 	document.addEventListener("keyup",function(evnt){
 	delete keyState[evnt.keyCode];
 	});
-	board.init();
-	var snakeSpawn = {x:(Math.floor(board.width/2))  , y:(Math.floor(board.length/2 ))};	
-	snake.init(snakeSpawn.x,snakeSpawn.y,NORTH);
-	board.set(SNAKE,snakeSpawn.x,snakeSpawn.y);
-	addFood();
+	start();
 	animationLoop();
 }
+
+
 
 function animationLoop(){
 	tick();
@@ -123,21 +127,24 @@ function animationLoop(){
 }
 
 function drawBoard(){
+
+	var h = canvas.height/BOARD_LENGTH;
+	var w = canvas.width/BOARD_WIDTH;
+
 	for(var x = 0; x < board.width; x++){
 		for(var y = 0; y < board.length; y++){
 			switch (board.get(x,y)){
 				case EMPTY:
-					//ctx.fillStyle= '#FFFFFF';
+					ctx.fillStyle= '#FFFFFF';
 					break;
 				case SNAKE:
 					ctx.fillStyle= '#007F00';
-					ctx.fillRect(x,y,objSize,objSize);
 					break;
 				case FOOD:
 					ctx.fillStyle= '#660000';
-					ctx.fillRect(x,y,objSize,objSize);
 					break;
 			}
+			ctx.fillRect(w*x,h*y,h,w);
 		}
 		}
 }
@@ -150,7 +157,7 @@ function tick(){
   	if (keyState[40]) snake.direction = SOUTH;
 
 	frame++;
-	if(frame % 1 === 0){
+	if(frame % 2 === 0){
 	var newX = snake.end[0];
 	var newY = snake.end[1];
 	
@@ -169,18 +176,22 @@ function tick(){
 			break;
 	}
 
-	if(newX > BOARD_WIDTH || newY > BOARD_LENGTH || newX < 0 || newY < 0){
-		board.init;
+	if(newX >= BOARD_WIDTH || newY >= BOARD_LENGTH || newX < 0 || newY < 0){
+		return start();
 	}
-	console.log(newX);
+
+	if(board.get(newX,newY) === FOOD){
+	//snake.increaseLength(snake.end[0],snake.end[1]);
+		snake.increaseLength(newX,newY);
+		addFood();
+	}
+
+	console.log(snake.end);
 	board.set(EMPTY,snake.end[0],snake.end[1]);
-	ctx.fillStyle= '#FFFFFF';
-	ctx.fillRect(snake.end[0],snake.end[1],objSize,objSize);
 	snake.end[0] = newX;
 	snake.end[1] = newY;
-	console.log(keyState);
+	//console.log(keyState);
 	board.set(SNAKE,newX,newY);
-
 }
 
 
