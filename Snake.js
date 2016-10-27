@@ -69,14 +69,14 @@ var snake = {
 	//Function that increases length of snake/ if no snake exists creates first instance
 	increaseLength: function(x,y){
 
-		this.followers.unshift([x,y]);
+		this.followers.unshift({x:x,y:y});
 		this.end = this.followers[0];
 
 	},
 
 	//Shortens snake by removing follower
 	remove: function(){
-		this.followers.pop();
+		return this.followers.pop();
 	}
 
 };
@@ -98,6 +98,7 @@ function addFood(){
 function start(){
 
 	board.init();
+	score = 0;
 	var snakeSpawn = {x:(Math.floor(board.width/2))  , y:(Math.floor(board.length/2 ))};	
 	snake.init(snakeSpawn.x,snakeSpawn.y,NORTH);
 	board.set(SNAKE,snakeSpawn.x,snakeSpawn.y);
@@ -158,8 +159,8 @@ function tick(){
 
 	frame++;
 	if(frame % 2 === 0){
-	var newX = snake.end[0];
-	var newY = snake.end[1];
+	var newX = snake.end.x;
+	var newY = snake.end.y;
 	
 	switch(snake.direction){
 		case NORTH:
@@ -176,22 +177,25 @@ function tick(){
 			break;
 	}
 
-	if(newX >= BOARD_WIDTH || newY >= BOARD_LENGTH || newX < 0 || newY < 0){
+	if(newX >= BOARD_WIDTH || newY >= BOARD_LENGTH || newX < 0 || newY < 0 || board.get(newX,newY) === SNAKE){
 		return start();
 	}
 
 	if(board.get(newX,newY) === FOOD){
-	//snake.increaseLength(snake.end[0],snake.end[1]);
-		snake.increaseLength(newX,newY);
+		score ++;
 		addFood();
+		//board.set(SNAKE,newX,newY);
+		//snake.increaseLength(newX,newY);
+	}else{
+	var tail = snake.remove();
+	console.log("tail is : " + tail);
+	console.log("snake : " + snake.followers);
+	board.set(EMPTY,tail.x,tail.y);
 	}
 
-	console.log(snake.end);
-	board.set(EMPTY,snake.end[0],snake.end[1]);
-	snake.end[0] = newX;
-	snake.end[1] = newY;
-	//console.log(keyState);
 	board.set(SNAKE,newX,newY);
+	snake.increaseLength(newX,newY);
+
 }
 
 
